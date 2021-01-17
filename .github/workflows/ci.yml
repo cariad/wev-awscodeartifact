@@ -22,7 +22,7 @@ jobs:
         run: echo "${GITHUB_REF##*/}" > wev_awscodeartifact/VERSION
 
       - name: Build
-        run: pipenv run ./build.sh
+        run: pipenv run python setup.py bdist_wheel
 
       - name: Archive distributable
         uses: actions/upload-artifact@v2

@@ -6,7 +6,7 @@ from wev.sdk import PluginBase, Resolution, ResolutionSupport
 from wev.sdk.exceptions import MissingConfigurationError
 
 from wev_awscodeartifact.authoriser import Authoriser
-
+from wev_awscodeartifact.version import get_version
 
 class Plugin(PluginBase):
     """ `wev-awscodeartifact` plugin. """
@@ -71,4 +71,4 @@ class Plugin(PluginBase):
     @property
     def version(self) -> str:
         """ Gets the plugin's version. """
-        return "1.0.0"
+        return get_version()

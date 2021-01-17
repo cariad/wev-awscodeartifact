@@ -1,0 +1,74 @@
+Description: CodeArtifact infrastructure for testing wev-awscodeartifact
+Resources:
+  User:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: AllowPullFromTestRepository
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - codeartifact:Describe*
+                  - codeartifact:Get*
+                  - codeartifact:List*
+                  - codeartifact:ReadFromRepository
+                Effect: Allow
+                Resource:
+                  - Fn::Sub: arn:aws:codeartifact:${AWS::Region}:${AWS::AccountId}:domain/wev-awscodeartifact-test
+                  - Fn::Sub: arn:aws:codeartifact:${AWS::Region}:${AWS::AccountId}:domain/wev-awscodeartifact-test/pypi-mirror
+                  - Fn::Sub: arn:aws:codeartifact:${AWS::Region}:${AWS::AccountId}:package/wev-awscodeartifact-test/pypi-mirror/pypi/tupper
+              - Action: sts:GetServiceBearerToken
+                Effect: Allow
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    "sts:AWSServiceName": codeartifact.amazonaws.com
+
+  Domain:
+    Type: AWS::CodeArtifact::Domain
+    Properties:
+      DomainName: wev-awscodeartifact-test
+      PermissionsPolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: codeartifact:GetAuthorizationToken
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - User
+                  - Arn
+            Resource: "*"
+
+  Repository:
+    Type: AWS::CodeArtifact::Repository
+    Properties:
+      Description: For testing the wev-awscodeartifact package
+      DomainName:
+        Fn::GetAtt:
+          - Domain
+          - Name
+      ExternalConnections:
+        - public:pypi
+      PermissionsPolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - codeartifact:DescribePackageVersion
+              - codeartifact:DescribeRepository
+              - codeartifact:GetPackageVersionReadme
+              - codeartifact:GetRepositoryEndpoint
+              - codeartifact:ListPackageVersionAssets
+              - codeartifact:ListPackageVersionDependencies
+              - codeartifact:ListPackageVersions
+              - codeartifact:ListPackages
+              - codeartifact:ReadFromRepository
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - User
+                  - Arn
+            Resource: "*"
+      RepositoryName: pypi-mirror

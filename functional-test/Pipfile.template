@@ -1,0 +1,10 @@
+[[source]]
+name = "private"
+url = "https://aws:$CODEARTIFACT_AUTH_TOKEN@corf-test-807041577214.d.codeartifact.eu-west-1.amazonaws.com/pypi/pypi-mirror/simple/"
+verify_ssl = true
+
+[packages]
+tupper = "*"
+
+[requires]
+# The Python version to run with will be injected at run time.

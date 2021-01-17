@@ -1,0 +1,10 @@
+[run]
+command_line = -m pytest
+omit =
+    */conftest.py
+    */mock_*.py
+    */test_*.py
+source = wev_awscodeartifact
+
+[report]
+fail_under = 80

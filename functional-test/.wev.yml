@@ -1,0 +1,6 @@
+CODEARTIFACT_AUTH_TOKEN:
+  plugin:
+    id: wev-awscodeartifact
+    domain: wev-awscodeartifact-test
+    account: "807041577214"
+    region: eu-west-1

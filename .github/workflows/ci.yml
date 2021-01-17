@@ -1,0 +1,110 @@
+name: wev-awscodeartifact
+
+on:  # yamllint disable-line rule:truthy
+  - push
+
+jobs:
+
+  build:
+    container: cariad/ci:1.0.0
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Sync dependencies
+        run: pipenv sync --dev
+
+      - name: Test
+        run: pipenv run ./test.sh
+
+      - name: Version
+        run: echo "${GITHUB_REF##*/}" > wev_awscodeartifact/VERSION
+
+      - name: Build
+        run: pipenv run python setup.py bdist_wheel
+
+      - name: Archive distributable
+        uses: actions/upload-artifact@v2
+        with:
+          name: distributable
+          path: dist
+          retention-days: 1
+
+  cli_test:
+    name: CLI test (Python ${{ matrix.python-version }})
+    needs: build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.9"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Download build distributable
+        uses: actions/download-artifact@v2
+        with:
+          name: distributable
+
+      - name: CLI test
+        run: |
+          pip install wev
+          pip install "$(ls *.whl)"
+
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+
+          cd functional-test
+
+          cp Pipfile.template Pipfile
+          echo "python_version = \"${{ matrix.python-version }}\"" >> Pipfile
+
+          # Install pipenv
+          pip install --upgrade pip
+          pip install pipenv
+
+          # Assert that "tupper" is not yet installed, so we can later confirm
+          # that we definitely pulled via an authorisation token.
+          set +e
+          pipenv run python -m tupper
+          returned=$?
+          set -e
+          if [[ "${returned}" != "1" ]]; then
+            echo "Expected tupper execution to fail gracefully: ${returned}"
+            exit 1
+          fi
+
+          # Install our Pipfile (i.e. install "tupper") via wev.
+          wev pipenv install --skip-lock
+
+          # Assert that we just pulled "tupper".
+          pipenv run python -m tupper
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags')
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download build distributable
+        uses: actions/download-artifact@v2
+        with:
+          name: distributable
+
+      - name: Create distributable directory
+        run: |
+          mkdir dist
+          cp *.whl dist
+          ls -al dist/
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@v1.4.1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}

@@ -1,0 +1,3 @@
+[tool.pytest.ini_options]
+testpaths = "wev_awscodeartifact"
+addopts = "--cov=wev_awscodeartifact --cov-branch --cov-report=html --cov-report=term-missing:skip-covered --cov-report=xml --no-cov-on-fail"

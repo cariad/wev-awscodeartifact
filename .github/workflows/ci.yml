@@ -82,7 +82,7 @@ jobs:
           fi
 
           # Install our Pipfile (i.e. install "tupper") via wev.
-          wev pipenv install
+          wev pipenv install --skip-lock
 
           # Assert that we just pulled "tupper".
           pipenv run python -m tupper

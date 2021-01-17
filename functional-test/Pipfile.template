@@ -1,6 +1,6 @@
 [[source]]
 name = "private"
-url = "https://aws:$CODEARTIFACT_AUTH_TOKEN@corf-test-807041577214.d.codeartifact.eu-west-1.amazonaws.com/pypi/pypi-mirror/simple/"
+url = "https://aws:$CODEARTIFACT_AUTH_TOKEN@wev-awscodeartifact-test-807041577214.d.codeartifact.eu-west-1.amazonaws.com/pypi/pypi-mirror/simple/"
 verify_ssl = true
 
 [packages]

@@ -12,14 +12,14 @@ echo "Linting YAML..."
 yamllint . --strict
 
 echo "Sorting Python import definitions..."
-if [[ "${ci:=}" == "0" ]]; then
+if [[ "${ci:?}" == "1" ]]; then
   isort . --check-only --diff
 else
   isort .
 fi
 
 echo "Applying opinionated Python code style..."
-if [[ "${ci:=}" == "0" ]]; then
+if [[ "${ci:?}" == "1" ]]; then
   black . --check --diff
 else
   black .

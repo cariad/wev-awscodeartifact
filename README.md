@@ -1,4 +1,4 @@
-# wev-awscodeartifact: A `wev` plugin to support Amazon Web Services CodeArtifact authorisation on the command line
+# wev-awscodeartifact:<br />A wev plugin to support Amazon Web Services CodeArtifact authorisation on the command line
 
 [![codecov](https://codecov.io/gh/cariad/wev-awscodeartifact/branch/main/graph/badge.svg?token=D48XKZJXJ7)](https://codecov.io/gh/cariad/wev-awscodeartifact)
 

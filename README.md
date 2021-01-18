@@ -6,7 +6,7 @@
 - 📋 **Requests** and **caches** CodeArtifact authorisation tokens.
 - 👩🏼‍💻 **Great for freelancers** working with multiple clients hosting CodeArtifact repositories.
 
-## The Problem
+## The Problem 🔥
 
 Say your `Pipfile` is configured to pull packages from a private Amazon Web Services CodeArtifact repository:
 
@@ -29,7 +29,7 @@ If you try to use `pipenv` before setting `CODEARTIFACT_AUTH_TOKEN` or if it hol
 
 `wev-awscodeartifact` extends [wev](https://github.com/cariad/wev) to handle your CodeArtifact authorisation token for you.
 
-## Installation
+## Installation 🎁
 
 `wev-awscodeartifact` requires Python 3.8 or later.
 
@@ -44,7 +44,7 @@ pip3 install wev
 pip3 install wev-awscodeartifact
 ```
 
-## Configuration
+## Configuration ⚙️
 
 ### Location
 
@@ -81,7 +81,7 @@ Optional properties:
 
 You probably don't want to add the `profile` property to `.wev.yml` if you plan to commit and share it with your team mates. Profile names are personal, and you don't want to force everyone to use the same as you.
 
-If you do need to set `profile`, I suggest you create it in `.wev.user.yml` (which should not be shared) and let `wev` merge it in.
+If you _do_ need to set `profile`, I suggest you create it in `.wev.user.yml` (which should not be shared) and let `wev` merge it in.
 
 For example:
 
@@ -103,7 +103,7 @@ CODEARTIFACT_AUTH_TOKEN:
     profile: work
 ```
 
-## Usage
+## Usage ⌨️
 
 With `wev` and `wev-awscodeartifact` installed and configured, you can run `pipenv install` via `wev` to set your CodeArtifact authorisation token:
 
@@ -111,7 +111,7 @@ With `wev` and `wev-awscodeartifact` installed and configured, you can run `pipe
 wev pipenv install
 ```
 
-## FAQs
+## FAQs 🙋‍♀️
 
 ### Can I change the environment variable from CODEARTIFACT_AUTH_TOKEN?
 
@@ -119,7 +119,7 @@ Yes! Call it anything you like.
 
 ### Does wev-awscodeartifact work with other package managers?
 
-Yes! `wev-awscodeartifact` will work with _any_ command line tool tnat needs CodeArtifact authorisation tokens in environment variables.
+Yes! `wev-awscodeartifact` will work with _any_ command line tool that needs CodeArtifact authorisation tokens in environment variables.
 
 ## Thank you! 🎉
 

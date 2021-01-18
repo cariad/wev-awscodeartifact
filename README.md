@@ -2,16 +2,18 @@
 
 [![codecov](https://codecov.io/gh/cariad/wev-awscodeartifact/branch/main/graph/badge.svg?token=D48XKZJXJ7)](https://codecov.io/gh/cariad/wev-awscodeartifact)
 
-`wev-awscodeartifact` is a plugin for [wev](https://github.com/cariad/wev) to generate Amazon Web Services CodeArtifact authorisation tokens.
+- ⚙️ Plugin for **[wev](https://github.com/cariad/wev)** (**w**ith **e**nvironment **v**ariables).
+- 📋 **Requests** and **caches** CodeArtifact authorisation tokens.
+- 👩🏼‍💻 **Great for freelancers** working with multiple clients hosting CodeArtifact repositories.
 
-## Example
+## The Problem
 
-Say your `Pipfile` is configured to pull packages from a private Amazon Web Services CodeArtifact repository. The file expects `$CODEARTIFACT_AUTH_TOKEN` to be set to your authorisation token.
+Say your `Pipfile` is configured to pull packages from a private Amazon Web Services CodeArtifact repository:
 
 ```text
 [[source]]
 name = "private"
-url = "https://aws:$CODEARTIFACT_AUTH_TOKEN@wev-awscodeartifact-test-807041577214.d.codeartifact.eu-west-1.amazonaws.com/pypi/pypi-mirror/simple/"
+url = "https://aws:$CODEARTIFACT_AUTH_TOKEN@corp-012345678901.d.codeartifact.eu-west-1.amazonaws.com/pypi/pypi-mirror/simple/"
 verify_ssl = true
 
 [packages]
@@ -21,78 +23,101 @@ tupper = "*"
 python = "3.9"
 ```
 
+Your `Pipfile` expects the `CODEARTIFACT_AUTH_TOKEN` environment variable to be set to your authorisation token.
 
-Say your IAM user policy requires you to verify your identity via multi-factor authentication.
+If you try to use `pipenv` before setting `CODEARTIFACT_AUTH_TOKEN` or if it holds an expired token, your pull from the repository will fail.
 
-This limits your ability to use the `aws` CLI because you can't provide MFA tokens with your request:
+`wev-awscodeartifact` extends [wev](https://github.com/cariad/wev) to handle your CodeArtifact authorisation token for you by running `wev pipenv install`.
 
-```text
-$ aws s3 ls
+## Installation
 
-An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
-```
+[wev](https://github.com/cariad/wev) and [wev](https://github.com/cariad/wev) plugins are usually happy to run within virtual environments, but that's tricky if your project's `Pipfile` has _only_ private sources that require a token.
 
-`wev-awsmfa` will ask for your MFA token as-needed and authenticate you automatically.
+`wev-awscodeartifact` cannot generate a token before it's installed.
 
-## Setup
-
-Install [wev](https://github.com/cariad/wev) (if you haven't already) and `wev-awsmfa`:
+For an easy life, I recommend installing [wev](https://github.com/cariad/wev) and `wev-awscodeartifact` globally, _outside_ of your virtual environment.
 
 ```bash
 pip3 install wev
-pip3 install wev-awsmfa
+pip3 install wev-awscodeartifact
 ```
 
-In your working directory (or home directory, to enable `wev-awsmfa`) create or edit a `.wev.yml` file and add the following configuration:
+## Configuration
+
+### Location
+
+[wev](https://github.com/cariad/wev) configuration files apply to the _working_ and _child_ directories.
+
+This gives you a few options for where to place your configuration:
+
+- If you always use the same CodeArtifact repository then place the configuration in your home directory (i.e. `~/.wev.yml`).
+- If you're a contractor working on a few projects for a client with a CodeArtifact repository (i.e. you have `~/client-foo/project-a` and `~/client-foo/project-b` on your machine) then place the configuration in your client's project directory (i.e. `~/client-foo/.wev.yml`).
+- If you have only one project that requires a CodeArtifact token then place the configuration in that project's directory (i.e. `~/project-foo/.wev.yml`).
+
+### Content
+
+A minimal configuration would look like this:
 
 ```yaml
-[AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]:
+CODEARTIFACT_AUTH_TOKEN:
   plugin:
-    id: wev-awsmfa
+    id: wev-awscodeartifact
+    domain: corp
 ```
 
-This configures [wev](https://github.com/cariad/wev) to set the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` environment variables via the `wev-awsmfa` plugin.
+Required properties:
 
-Now, to run `aws s3 ls` via `wev`:
+- `domain`: Name of the CodeArtifact domain hosting the private repository.
+
+Optional properties:
+
+- `account`: ID of the AWS account hosting the CodeArtifact domain. Defaults to the account that your credentials authenticate into.
+- `region`: AWS region hosting the CodeArtifact domain. Defaults to your AWS credentials profile's region.
+- `profile`: Name of the AWS credentials profile to use.
+
+### Configuring your profile when you work in a team
+
+You probably don't want to add the `profile` property to `.wev.yml` if you plan to commit and share it with your team mates. Profile names are personal, and you don't want to force everyone to use the same as you.
+
+If you do need to set `profile`, I suggest you create it in `.wev.user.yml` (which should not be shared) and let [wev](https://github.com/cariad/wev) merge it in.
+
+For example:
+
+```yaml
+# .wev.yml
+CODEARTIFACT_AUTH_TOKEN:
+  plugin:
+    id: wev-awscodeartifact
+    account: "012345678901"
+    domain: corp
+    region: eu-west-1
+```
+
+```yaml
+# .wev.user.yml
+CODEARTIFACT_AUTH_TOKEN:
+  plugin:
+    id: wev-awscodeartifact
+    profile: work
+```
+
+## Usage
+
+With `wev` and `wev-awscodeartifact` installed and configured, you can run `pipenv install` via `wev` to set your CodeArtifact authorisation token:
 
 ```bash
-wev aws s3 ls
+wev pipenv install
 ```
 
-You'll be prompted to enter your MFA token, then `wev` will authenticate you and run the command.
+## FAQs
 
-[wev](https://github.com/cariad/wev) will cache your session for as long as possible, so you won't need to enter a new token every time.
+### Can I change the environment variable from CODEARTIFACT_AUTH_TOKEN?
 
-## Advanced configuration
+Yes! Call it anything you like.
 
-The configuration key must be a list of three strings which prescribe the environment variables to set for:
+### Does wev-awscodeartifact work with other package managers?
 
-1. **The access key ID.** You probably want this to be `AWS_ACCESS_KEY_ID`.
-1. **The secret access key.** You probably want this to be `AWS_SECRET_ACCESS_KEY`.
-1. **The session token.** You probably want this to be `AWS_SESSION_TOKEN`.
-
-Your minimal configuration is likely to look like this:
-
-```yaml
-[AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]:
-  plugin:
-    id: wev-awsmfa
-```
-
-There are two optional properties:
-
-- `mfa_device` describes the ARN of the MFA device to use. `wev-awsmfa` will attempt to discover this automatically if omitted.
-- `duration` describes the duration of the temporary session in seconds. Default is 900 seconds.
-
-A configuration with these optional properties set would look like this:
-
-```yaml
-[AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]:
-  plugin:
-    id: wev-awsmfa
-    duration: 1800
-    mfa_device: arn:aws:iam::123456789012:mfa/foo
-```
+Yes! `wev-awscodeartifact` will work with _any_ command line tool tnat needs CodeArtifact authorisation tokens in environment variables.
 
 ## Thank you! 🎉
 

@@ -33,7 +33,7 @@ setup(
     author="Cariad Eccleston",
     author_email="cariad@hey.com",
     classifiers=classifiers,
-    description='"wev" plugin for Amazon Web Services CodeArtifact authorisation',
+    description='"wev" plugin to support AWS CodeArtifact authorisation',
     entry_points={
         "wev.plugins": "wev-awscodeartifact = wev_awscodeartifact",
     },

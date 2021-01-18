@@ -116,10 +116,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ${{ env.DISTRIBUTABLE }}
-          asset_name: wev-awscodeartifact.whl
-          asset_content_type: application/x-wheel+zip
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
 
   publish_to_pypi:
     if: startsWith(github.ref, 'refs/tags')

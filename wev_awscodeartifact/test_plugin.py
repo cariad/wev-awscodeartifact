@@ -1,9 +1,19 @@
 from logging import Logger
 from typing import Optional
 
-from pytest import mark
+from pytest import mark, raises
+from wev.sdk.exceptions import MissingConfigurationError
 
 from wev_awscodeartifact.plugin import Plugin
+
+
+def test_domain__raises() -> None:
+    with raises(MissingConfigurationError) as ex:
+        Plugin({}).domain
+    assert str(ex.value) == (
+        "The domain key is required in this plugin's configuration: "
+        "The domain cannot be discovered automatically."
+    )
 
 
 @mark.parametrize(

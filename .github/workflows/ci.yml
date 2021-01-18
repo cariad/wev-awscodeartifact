@@ -18,6 +18,11 @@ jobs:
       - name: Test
         run: pipenv run ./test.sh
 
+      - uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          verbose: true
+
       - name: Version
         run: echo "${GITHUB_REF##*/}" > wev_awscodeartifact/VERSION
 

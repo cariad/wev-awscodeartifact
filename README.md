@@ -27,15 +27,15 @@ Your `Pipfile` expects the `CODEARTIFACT_AUTH_TOKEN` environment variable to be 
 
 If you try to use `pipenv` before setting `CODEARTIFACT_AUTH_TOKEN` or if it holds an expired token, your pull from the repository will fail.
 
-`wev-awscodeartifact` extends [wev](https://github.com/cariad/wev) to handle your CodeArtifact authorisation token for you by running `wev pipenv install`.
+`wev-awscodeartifact` extends [wev](https://github.com/cariad/wev) to handle your CodeArtifact authorisation token for you.
 
 ## Installation
 
-[wev](https://github.com/cariad/wev) and [wev](https://github.com/cariad/wev) plugins are usually happy to run within virtual environments, but that's tricky if your project's `Pipfile` has _only_ private sources that require a token.
+[wev](https://github.com/cariad/wev) and `wev` plugins are usually happy to run within virtual environments, but that's tricky if your project's `Pipfile` has _only_ private sources that require a token.
 
 `wev-awscodeartifact` cannot generate a token before it's installed.
 
-For an easy life, I recommend installing [wev](https://github.com/cariad/wev) and `wev-awscodeartifact` globally, _outside_ of your virtual environment.
+For an easy life, I recommend installing `wev` and `wev-awscodeartifact` globally, _outside_ of your virtual environment.
 
 ```bash
 pip3 install wev
@@ -79,7 +79,7 @@ Optional properties:
 
 You probably don't want to add the `profile` property to `.wev.yml` if you plan to commit and share it with your team mates. Profile names are personal, and you don't want to force everyone to use the same as you.
 
-If you do need to set `profile`, I suggest you create it in `.wev.user.yml` (which should not be shared) and let [wev](https://github.com/cariad/wev) merge it in.
+If you do need to set `profile`, I suggest you create it in `.wev.user.yml` (which should not be shared) and let `wev` merge it in.
 
 For example:
 

@@ -31,6 +31,8 @@ If you try to use `pipenv` before setting `CODEARTIFACT_AUTH_TOKEN` or if it hol
 
 ## Installation
 
+`wev-awscodeartifact` requires Python 3.8 or later.
+
 [wev](https://github.com/cariad/wev) and `wev` plugins are usually happy to run within virtual environments, but that's tricky if your project's `Pipfile` has _only_ private sources that require a token.
 
 `wev-awscodeartifact` cannot generate a token before it's installed.

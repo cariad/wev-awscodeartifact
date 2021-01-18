@@ -1,17 +1,25 @@
 #!/bin/bash -e
 
+if [[ "${CI:=}" == "true" ]]; then
+  echo "Linting in CI mode. Warnings will result in failure."
+  ci=1
+else
+  echo "Linting in LOCAL mode. Warnings will be fixed when possible."
+  ci=0
+fi
+
 echo "Linting YAML..."
 yamllint . --strict
 
 echo "Sorting Python import definitions..."
-if [[ "${ci:=}" == "true" ]]; then
+if [[ "${ci:=}" == "0" ]]; then
   isort . --check-only --diff
 else
   isort .
 fi
 
 echo "Applying opinionated Python code style..."
-if [[ "${ci:=}" == "true" ]]; then
+if [[ "${ci:=}" == "0" ]]; then
   black . --check --diff
 else
   black .

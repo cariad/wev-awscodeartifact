@@ -8,6 +8,7 @@ from wev.sdk.exceptions import MissingConfigurationError
 from wev_awscodeartifact.authoriser import Authoriser
 from wev_awscodeartifact.version import get_version
 
+
 class Plugin(PluginBase):
     """ `wev-awscodeartifact` plugin. """
 

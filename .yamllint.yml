@@ -4,6 +4,7 @@ ignore: |
    .venv
 
 rules:
+  comments-indentation: disable
   document-start: disable
   line-length:
     allow-non-breakable-inline-mappings: true

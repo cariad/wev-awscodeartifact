@@ -52,12 +52,12 @@ If in doubt, create your configuration file as `wev.yml` in your project directo
 
 ### Properties
 
-| Property | Required | Description                                                    | Default                  |
-|----------|----------|----------------------------------------------------------------|--------------------------|
-| domain   | ✔️        | Name of the CodeArtifact domain hosting the private repository |                          |
-| account  |          | ID of the AWS account hosting the CodeArtifact domain          | _Your profile's account_ |
-| region   |          | AWS region hosting the CodeArtifact domain                     | _Your profile's region_  |
-| profile  |          | AWS named profile to use for authentication                    | _Your default profile_   |
+| Property | Required | Description                                                                                                     | Default                  |
+|----------|----------|-----------------------------------------------------------------------------------------------------------------|--------------------------|
+| account  |          | AWS account ID                                                                                                  | _Your profile's account_ |
+| domain   | ✔️        | CodeArtifact domain name (in `corp-012345678901.d.codeartifact.eu-west-1.amazonaws.com` the "domain" is `corp`) |                          |
+| profile  |          | AWS named profile to use for authentication                                                                     | _Your default profile_   |
+| region   |          | AWS region hosting the CodeArtifact domain                                                                      | _Your profile's region_  |
 
 ### Examples
 
@@ -92,7 +92,6 @@ CODEARTIFACT_AUTH_TOKEN:
 # .wev.user.yml
 CODEARTIFACT_AUTH_TOKEN:
   plugin:
-    id: wev-awscodeartifact
     profile: work
 ```
 

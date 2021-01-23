@@ -52,12 +52,14 @@ If in doubt, create your configuration file as `wev.yml` in your project directo
 
 ### Properties
 
-| Property | Required | Description                                                                                                     | Default                  |
-|----------|----------|-----------------------------------------------------------------------------------------------------------------|--------------------------|
-| account  |          | AWS account ID                                                                                                  | _Your profile's account_ |
-| domain   | ✔️        | CodeArtifact domain name (in `corp-012345678901.d.codeartifact.eu-west-1.amazonaws.com` the "domain" is `corp`) |                          |
-| profile  |          | AWS named profile to use for authentication                                                                     | _Your default profile_   |
-| region   |          | AWS region hosting the CodeArtifact domain                                                                      | _Your profile's region_  |
+| Property | Required | Description                                 | Default                  |
+|----------|----------|---------------------------------------------|--------------------------|
+| account  |          | AWS account ID                              | _Your profile's account_ |
+| domain   | ✔️        | CodeArtifact domain name<sup>1</sup>        |                          |
+| profile  |          | AWS named profile to use for authentication | _Your default profile_   |
+| region   |          | AWS region hosting the CodeArtifact domain  | _Your profile's region_  |
+
+<sup>1</sup> The CodeArtifact domain is _not_ the same as the repository's domain name. Given the domain name `corp-000000000000.d.codeartifact.eu-west-1.amazonaws.com`, the CodeArtifact domain is `corp`.
 
 ### Examples
 
